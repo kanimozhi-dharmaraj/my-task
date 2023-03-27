@@ -1,13 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate,Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const FormTask = () => {
+    const [params] = useSearchParams();
+    console.log(params.get("name"));
     const[name,setName] = useState('');
     const[des,setDes] = useState('');
     const[status,setStatus] = useState(false);
-    const[task,setTask] = useState([]);
+    const[task,setTask] = useState(JSON.parse(localStorage.getItem('tasks'))||[]);
     const[showErrMsg,setShowErrMsg] = useState(false);
-    const navigate = useNavigate();
+   
+    useEffect(() => {
+        if (params.get("name") !== null) {
+          const temp = JSON.parse(localStorage.getItem('tasks'));
+          const obj = temp.find((item) => item.name === params.get("name"));
+          console.log(obj)
+          
+            setName(obj.name);
+            setDes(obj.description);
+            setStatus(obj.status);
+        
+        }
+      }, [params]);
+      
+
     const ChangeInput = (e) =>{
         console.log(e.target.value);
         if(e.target.name === 'taskName'){
@@ -17,39 +33,53 @@ const FormTask = () => {
         }else
         setStatus(e.target.checked)
     }
-    const handleSubmit = (e) =>{
+   
+    const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(name,des,status);
-        if(name==="" && des===""){
-            setShowErrMsg(true);
+        console.log(name, des, status);
+        if (name === "" && des === "") {
+          setShowErrMsg(true);
+        } else if (params.get("name") !== null) {
+          const updatedTask = {
+            name: name,
+            description: des,
+            status: status
+          };
+          const updatedTasks = task.map((t) =>
+            t.name === params.get("name") ? updatedTask : t
+          );
+          setTask(updatedTasks);
+        } else {
+          const newTask = {
+            name: name,
+            description: des,
+            status: status
+          };
+          setTask([...task, newTask]);
         }
-        const newTask = {
-            name : name,
-            description : des,
-            status : status
-        }
-        console.log(newTask)
-        setTask([...task,newTask]);
-        console.log(task)
-        
-       // navigate("/Home");
-    }
+        setName("");
+        setDes("");
+        setStatus(false);
+      };
+      
     useEffect(()=>{
+      
         localStorage.setItem('tasks',JSON.stringify(task));
         console.log(task)
     },[task])
     console.log(task)
+  
   return (
     <div>FormTask
         <form onSubmit={handleSubmit}>
             <div>
                 <label>Task Name  : </label>
-                <input name="taskName" placeholder='taskName' onChange={ChangeInput}></input>
+                <input name="taskName" placeholder='taskName' value={name} onChange={ChangeInput}></input>
             </div>
             {showErrMsg && name === "" && <p>name is required</p>}
             <div>
                 <label>Description  : </label>
-                <input name="description" placeholder='description' onChange={ChangeInput}></input>
+                <input name="description" placeholder='description' value={des} onChange={ChangeInput}></input>
             </div>
             {showErrMsg && des === "" && <p>description is required</p>}
             <div>

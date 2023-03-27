@@ -6,7 +6,7 @@ const Login = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [showErrMsg, setShowErrMsg] = useState(false);
-  const [users, setUsers] = useState([]);
+  //const [users, setUsers] = useState([]);
 
   const inputChange = (e) => {
     console.log(e.target.value);
@@ -69,8 +69,8 @@ const Login = () => {
           )}
           <input type="Submit"></input>
           {showErrMsg &&
-            users.username !== name &&
-            users.password !== password && (
+            Data.username !== name &&
+            Data.password !== password && (
               <p style={{ color: "red" }}>
                 Username and password are Incorrect
               </p>
