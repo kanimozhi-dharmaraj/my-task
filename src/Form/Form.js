@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 const FormTask = () => {
     const [params] = useSearchParams();
     console.log(params.get("name"));
+    const[id,setId] = useState( );
     const[name,setName] = useState('');
     const[des,setDes] = useState('');
     const[status,setStatus] = useState(false);
@@ -15,7 +16,7 @@ const FormTask = () => {
           const temp = JSON.parse(localStorage.getItem('tasks'));
           const obj = temp.find((item) => item.name === params.get("name"));
           console.log(obj)
-          
+            setId(obj.id);
             setName(obj.name);
             setDes(obj.description);
             setStatus(obj.status);
@@ -26,7 +27,10 @@ const FormTask = () => {
 
     const ChangeInput = (e) =>{
         console.log(e.target.value);
-        if(e.target.name === 'taskName'){
+        if(e.target.name === 'id'){
+          setId(e.target.value)
+        }
+        else if(e.target.name === 'taskName'){
             setName(e.target.value)
         }else if(e.target.name === 'description'){
             setDes(e.target.value)
@@ -36,11 +40,12 @@ const FormTask = () => {
    
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(name, des, status);
+        console.log(id,name, des, status);
         if (name === "" && des === "") {
           setShowErrMsg(true);
         } else if (params.get("name") !== null) {
           const updatedTask = {
+            id : id,
             name: name,
             description: des,
             status: status
@@ -51,12 +56,14 @@ const FormTask = () => {
           setTask(updatedTasks);
         } else {
           const newTask = {
+            id : id,
             name: name,
             description: des,
             status: status
           };
           setTask([...task, newTask]);
         }
+        setId("")
         setName("");
         setDes("");
         setStatus(false);
@@ -72,6 +79,10 @@ const FormTask = () => {
   return (
     <div>FormTask
         <form onSubmit={handleSubmit}>
+        <div>
+                <label>Id : </label>
+                <input name="id" placeholder='id' value={id} onChange={ChangeInput}></input>
+            </div>
             <div>
                 <label>Task Name  : </label>
                 <input name="taskName" placeholder='taskName' value={name} onChange={ChangeInput}></input>

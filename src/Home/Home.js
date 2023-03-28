@@ -45,18 +45,37 @@ const Home = () => {
     const filtered = items && items.filter((item) => item.status === true);
     console.log('filtered', filtered);
     setItems(filtered || []);
+    //localStorage.setItem('tasks',JSON.stringify(filtered))
   };
   
-
+  const getClickedBox = (id) => {
+    const newArray = [...items]; // create a copy of the current array
+    newArray[id].status = !newArray[id].status; // toggle the isCompleted property of the clicked task
+   
+    setItems(newArray); // update the state with the new array
+    //localStorage.setItem('tasks',JSON.stringify(newArray))
+    if(newArray[id].status === false){
+      const filtered = items.filter((item)=> items.filter ? item.status === true : true);
+      setItems(filtered); 
+    
+  };
+ 
+}
   return (
     <>
       <div>
         Task
         {items && items.map((item, index) => (
           <div key={index}>
+            <b>Id :</b>{item.id}{" "}
             <b>Name : </b>
             {item.name} <b>Description :</b> {item.description}{" "}
             <b>Status :</b> {item.status ? "completed" : "notComplete"}
+            <input
+                type="checkbox"
+                checked={item.status}
+                  onChange={() => getClickedBox(item.id-1)}>
+                </input>
             <button onClick={() => handleDelete(item.name)}>Delete</button>
             <button onClick={() => handleEdit(item)}>Edit</button>
           </div>
