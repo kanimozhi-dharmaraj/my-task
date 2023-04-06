@@ -74,7 +74,7 @@ const Home = () => {
             <input
                 type="checkbox"
                 checked={item.status}
-                  onChange={() => getClickedBox(item.id-1)}>
+                  onChange={() => getClickedBox(item.id)}>
                 </input>
             <button onClick={() => handleDelete(item.name)}>Delete</button>
             <button onClick={() => handleEdit(item)}>Edit</button>

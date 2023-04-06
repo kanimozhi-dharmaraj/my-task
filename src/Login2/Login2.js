@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, {useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Data from "../Data.json";
 import { stateContext } from "../context/StateContext";
+import Data from "../Data.json";
+
 
 const Login = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [showErrMsg, setShowErrMsg] = useState(false);
-  //const [users, setUsers] = useState([]);
-  const {state,dispatch} = useContext(stateContext);  //state reducer
-  console.log("state", state,dispatch);
+  const{state,dispatch} = useContext(stateContext)
+  console.log("state",state,dispatch)
   const inputChange = (e) => {
     console.log(e.target.value);
     if (e.target.name === "username") {
@@ -33,14 +33,16 @@ const Login = () => {
 
     if (user) {
       console.log("Login successful");
-
-      navigate("/Home");
+      localStorage.setItem("isLoggedIn",JSON.stringify(true));
+      dispatch({ type: 'LOGIN', payload: true });
+      navigate("/Home2");
       // Perform login here
     } else {
       console.log("Login failed");
       setShowErrMsg(true);
       // Display error message here
     }
+    
   };
 
   return (
@@ -78,8 +80,7 @@ const Login = () => {
             )}
         </div>
       </form>
-      {state.color}
-      <button onClick={()=>dispatch({type : 'UPDATE_COLOR', payload : "Red"})}>Update Color</button>
+      
     </div>
   );
 };
